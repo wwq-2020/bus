@@ -12,7 +12,6 @@ var (
 // Storage 存储接口
 type Storage interface {
 	Sink(string, *Event) (int64, error)
-	Fetch() ([]*Event, error)
 	Delete(int64) error
 }
 
@@ -29,6 +28,8 @@ func newMemStorage() Storage {
 
 func (ms *memStorage) Sink(topic string, event *Event) (int64, error) {
 	id := nextID()
+	ms.Lock()
+	defer ms.Unlock()
 	ms.m[id] = event
 	return id, nil
 }
@@ -38,10 +39,6 @@ func (ms *memStorage) Delete(id int64) error {
 	defer ms.Unlock()
 	delete(ms.m, id)
 	return nil
-}
-
-func (ms *memStorage) Fetch() ([]*Event, error) {
-	return nil, nil
 }
 
 func nextID() int64 {

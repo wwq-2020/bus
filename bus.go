@@ -138,6 +138,7 @@ func (b *bus) Shutdown() {
 	b.option.scheduler.Close()
 	b.option.executor.Shutdown()
 }
+
 func (b *bus) genEventTask(event *Event) *EventTask {
 	b.RLock()
 	defer b.RUnlock()
@@ -179,7 +180,6 @@ func (b *bus) genDeleteEventTask(event *Event) *EventTask {
 		Task:   task,
 		OpType: DeleteOp,
 	}
-
 }
 
 func (b *bus) schedule() {
