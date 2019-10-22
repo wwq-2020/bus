@@ -27,7 +27,6 @@ type Executor interface {
 type pooledExecutor struct {
 	size   int
 	taskCh chan Task
-	doneCh chan struct{}
 	wg     sync.WaitGroup
 	ctx    context.Context
 	cancel func()
@@ -41,7 +40,6 @@ func NewPooledExecutor(size int) Executor {
 		ctx:    ctx,
 		cancel: cancel,
 		taskCh: make(chan Task, size),
-		doneCh: make(chan struct{}),
 	}
 	pe.init()
 	return pe
